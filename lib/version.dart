@@ -7,7 +7,7 @@ library version;
 /// Provides immutable storage and comparison of semantic version numbers.
 class Version {
   static final RegExp _versionRegex =
-      new RegExp(r"^([\d.]+)(-([0-9A-Za-z\-.]+))?(\+([0-9A-Za-z\-.]+))?$");
+  new RegExp(r"^([\d.]+)(-([0-9A-Za-z\-.]+))?(\+([0-9A-Za-z\-.]+))?$");
   static final RegExp _buildRegex = new RegExp(r"^[0-9A-Za-z\-.]+$");
   static final RegExp _preReleaseRegex = new RegExp(r"^[0-9A-Za-z\-]+$");
 
@@ -42,7 +42,10 @@ class Version {
       throw new ArgumentError("preRelease must not be null");
     for (int i = 0; i < _preRelease.length; i++) {
       if (_preRelease[i] == null ||
-          _preRelease[i].toString().trim().length == 0)
+          _preRelease[i]
+              .toString()
+              .trim()
+              .length == 0)
         throw new ArgumentError(
             "preRelease semgents must not be null or empty");
       // Just in case
@@ -59,14 +62,13 @@ class Version {
     if (major < 0 || minor < 0 || patch < 0) {
       throw new ArgumentError("Version numbers must be greater than 0");
     }
-    if (major == 0 && minor == 0 && patch == 0) {
-      throw new ArgumentError(
-          "At least one component of the version number must be greater than 0");
-    }
   }
 
   @override
-  int get hashCode => this.toString().hashCode;
+  int get hashCode =>
+      this
+          .toString()
+          .hashCode;
 
   /// Pre-release information segments.
   List<String> get preRelease => new List<String>.from(_preRelease);
@@ -116,7 +118,9 @@ class Version {
     if (_preRelease.isNotEmpty) {
       output.write("-${_preRelease.join('.')}");
     }
-    if (build != null && build.trim().length > 0) {
+    if (build != null && build
+        .trim()
+        .length > 0) {
       output.write("+${build.trim()}");
     }
     return output.toString();
@@ -127,7 +131,9 @@ class Version {
   /// The string must conform to the specification at http://semver.org/
   /// Throws [FormatException] if the string is empty or does not conform to the spec.
   static Version parse(String versionString) {
-    if (versionString?.trim()?.isEmpty ?? true)
+    if (versionString
+        ?.trim()
+        ?.isEmpty ?? true)
       throw new FormatException("Cannot parse empty string into version");
 
     if (!_versionRegex.hasMatch(versionString))
@@ -148,7 +154,9 @@ class Version {
 
     final String preReleaseString = m.group(3) ?? "";
     List<String> preReleaseList = <String>[];
-    if (preReleaseString.trim().length > 0)
+    if (preReleaseString
+        .trim()
+        .length > 0)
       preReleaseList = preReleaseString.split(".");
 
     final String build = m.group(5) ?? "";
